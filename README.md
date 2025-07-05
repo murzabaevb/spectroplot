@@ -1,40 +1,138 @@
-# Purpose
+# SpectroPlot
 
-`spectrum_plot.py` allows to create 
-1. Plots of overlapped sub-bands of the same category, and 
-2. Combine adjacent or overlapped sub-bands into contiguous sub-bands.
+**SpectroPlot** is a Python class for loading frequency assignment data 
+from Excel files, cleaning it, and plotting frequency overlaps by category. 
+It’s designed for radio spectrum engineers, regulators, or analysts who want 
+to visualize how frequency assignments stack up within different categories 
+(e.g., services, technologies, or operators).
 
-## Input data structure
-It reads data from pre-formated Excel file named `categories and sub-bands.xlsx`.
-It is also expected that there is a sheet named `categories and sub-bands` 
-in the Excel file. The Excel file must be in the same folder as the 
-`spectrum_plot.py` file. Example of such a file is provided in `docs` folder.
+![Example Plot](./img/Figure_1.png)
 
-It is expected that the data is organized in columns:
+---
 
-| Column name      | Description                       |
-|------------------|-----------------------------------|
-| `category`       | filter applies for grouping       |
-| `start_freq_mhz` | start frequency, MHz              |
-| `end_freq_mhz`   | end frequency, MHz                |
-| `excluded`       | `yes`= not counted, `no`= counted |
+## Features
 
+✅ Load frequency ranges and categories directly from Excel  
+✅ Exclude specified entries (e.g., rows marked with `Exclude='yes'`)  
+✅ Automatically clean, validate, and prepare data  
+✅ Plot frequency overlap "staircase" charts per category  
+✅ Flexible column naming  
+✅ Configurable frequency bounds  
+✅ Handles near-identical frequencies with `epsilon` tolerance
 
-## Data export
-Contiguous ranges made of overlapped and adjacent sub-bands of the same
-category is stored in a separate Excel file 
-`frequency_overlap_data_DATE_TIME.xlsx`. This data is presented
-for all categories found in the `category` column. 
-Example of such a file is provided in `docs` folder.
+---
 
-## Frequency overlap diagram
-The overlap diagram is created and stored as 
-`CATEGORY_overlap_chart.png` file for each category. 
-All diagram files are stored in the same folder
-as the `spectrum_plot.py` file.
+## Requirements
 
-![Example diagram](docs/FSS_overlap_chart.png)
+- Python 3.7+
+- `pandas`
+- `matplotlib`
+- `openpyxl` (required by pandas to read `.xlsx`)
 
+## Installing
+```bash
+# From PyPl
+py -m pip install spectroplot  # on Windows
+python3 -m pip install spectroplot  # on Unix/macOS
 
+# From GitHub
+py -m pip install spectroplot @ git+https://github.com/murzabaevb/spectroplot.git  # on Windows 
+python3 -m pip install spectroplot @ git+https://github.com/murzabaevb/spectroplot.git  # on Unix/macOS
+```
 
- 
+---
+
+## Expected Excel Format
+
+Your Excel sheet must contain **four columns**, for example:
+
+| Category | Start  | Stop   | Exclude |
+|----------|--------|--------|---------|
+| LTE      | 700.0  | 720.0  |         |
+| GSM      | 900.0  | 915.0  | yes     |
+| 5G       | 3500.0 | 3700.0 |         |
+
+- **Category**: name of the assignment category (e.g., LTE, GSM)  
+- **Start**: start frequency (numeric)  
+- **Stop**: end frequency (numeric)  
+- **Exclude**: set to "yes" (case-insensitive) to exclude the row from plotting
+
+*Note:* These four columns could be named differently in Excel file. If so, 
+it is necessary to pass these headers when instantiating the object of the 
+class as shown in the example below. Apart from these four columns, the Excel 
+file may contain other columns that would be ignored during reading.
+
+---
+
+## Usage Example
+
+```python
+from spectroplot import SpectroPlot
+
+# Initialize with your Excel file, default sheet name and column headers
+sp = SpectroPlot(excel_file='data.xlsx')
+
+# Load and clean data
+sp.load_data()
+
+# Plot overlaps
+sp.plot()
+```
+
+Default values: 
+- `sheet_name='Sheet1`,
+- `columns=['Category', 'Start', 'Stop', 'Exclude']`
+
+```python
+from spectroplot import SpectroPlot
+# Initialize with your Excel file and custom sheet/columns
+sp = SpectroPlot(
+    excel_file='assignments.xlsx',
+    sheet_name='uhf',
+    columns=['system', 'f_low', 'f_hi', 'excl'],
+)
+
+# Load and clean data
+sp.load_data()
+
+# Plot overlaps of entire data read
+sp.plot()
+
+# Or specify frequency bounds as per your requirement
+sp.plot(min_freq=600, max_freq=4000)
+```
+
+---
+
+## Output
+
+- Generates a **matplotlib plot** with one subplot per category
+- Each plot shows the number of overlapping frequency assignments as a staircase
+- Colors are automatically assigned from the `tab20` colormap
+
+---
+
+## Parameters
+
+`SpectroPlot` constructor:
+- **excel_file**: Path to your Excel file  
+- **sheet_name**: Name of the worksheet to read (default: `'Sheet1'`)  
+- **columns**: List of four column names in order (default: `['Category', 'Start', 'Stop', 'Exclude']`)  
+- **epsilon**: Tolerance for merging events with nearly identical frequencies (default: `1e-6`)  
+
+`plot()` method:
+- **min_freq**: Lower frequency bound of plotting
+- **max_freq**: Upper frequency bound of plotting
+
+---
+
+## License
+
+MIT License. Feel free to use, modify, and contribute!
+
+---
+
+## Project Links
+
+- [GitHub Repository](https://github.com/murzabaevb/spectroplot.git)
+- [GitHub Issues](https://github.com/murzabaevb/spectroplot/issues)

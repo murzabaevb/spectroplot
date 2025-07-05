@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-class SpectrumPlotter:
+class SpectroPlot:
     def __init__(self,
                  excel_file,
                  sheet_name='Sheet1',
@@ -152,7 +152,8 @@ class SpectrumPlotter:
 
             # Plot
             color = self.colormap(idx / max(n_categories - 1, 1))  # normalize index to [0,1]
-            ax.step(freqs, overlaps, where='post', color=color, label={category})
+            # ax.step(freqs, overlaps, where='post', color=color, label={category})
+            ax.step(freqs, overlaps, where='post', color=color, label=category)
             ax.fill_between(freqs, overlaps, step='post', alpha=0.4, color=color)
 
             ax.set_xlim(min_freq, max_freq)

@@ -1,3 +1,3 @@
-from .spectroplot import SpectrumPlotter
+from .spectroplot import SpectroPlot
 
-__all__ = ["SpectrumPlotter"]
+__all__ = ["SpectroPlot"]

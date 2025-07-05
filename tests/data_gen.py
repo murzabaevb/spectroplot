@@ -5,14 +5,13 @@ import random  # for lists of tuples
 np.random.seed(42)  # reproducibility
 
 # Configuration
-n_rows = 300
+n_rows = 200
 categories = [
-    ('GSM', 880, 960),           # GSM 900 band
-    ('LTE', 1710, 1880),         # LTE 1800 band
-    ('5G', 3400, 3800),          # 5G NR mid-band
-    ('Microwave', 5925, 6425),   # 6 GHz microwave band
-    ('PMR', 450, 470),           # Private mobile radio
-    ('Satellite', 3700, 4200),   # C-band satellite downlink
+    ('DVB-T UHF', 470, 862),  # DVB-T UHF band
+    ('GSM-900', 880, 915),  # GSM900 UL band
+    ('GSM-900', 925, 960),  # GSM900 DL band
+    ('LTE-800', 791, 821),  # LTE800 DL band
+    ('LTE-800', 832, 862),  # LTE800 UL band
 ]
 regions = ['North', 'South', 'East', 'West']
 system_types = ['Fixed', 'Mobile', 'Satellite']

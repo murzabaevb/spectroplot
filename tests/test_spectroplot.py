@@ -1,5 +1,5 @@
-from spectroplot import SpectrumPlotter
+from spectroplot import SpectroPlot
 
-plotter = SpectrumPlotter(excel_file='data.xlsx')
+plotter = SpectroPlot(excel_file='data.xlsx')
 plotter.load_data()
-plotter.plot(min_freq=860, max_freq=960)
+plotter.plot()

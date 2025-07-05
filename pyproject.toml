@@ -15,7 +15,7 @@ requires-python = ">=3.13"
 authors = [
     {name = "Bakyt-Bek Murzabaev", email = "b.b.murzabaev@gmail.com"},
 ]
-description = "A Python class to plot frequency range overlaps."
+description = "A Python class for plotting frequency overlaps."
 readme = "README.md"
 license = "MIT"
 license-files = ["LICEN[CS]E.*"]
@@ -26,5 +26,5 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/pypa/sampleproject"
-Issues = "https://github.com/pypa/sampleproject/issues"
+Homepage = "https://github.com/murzabaevb/spectroplot"
+Issues = "https://github.com/murzabaevb/spectroplot/issues"
