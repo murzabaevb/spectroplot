@@ -36,8 +36,8 @@ py -m pip install spectroplot  # on Windows
 python3 -m pip install spectroplot  # on Unix/macOS
 
 # From GitHub
-py -m pip install spectroplot @ git+https://github.com/murzabaevb/spectroplot.git  # on Windows 
-python3 -m pip install spectroplot @ git+https://github.com/murzabaevb/spectroplot.git  # on Unix/macOS
+py -m pip install git+https://github.com/murzabaevb/spectroplot.git  # on Windows 
+python3 -m pip install git+https://github.com/murzabaevb/spectroplot.git  # on Unix/macOS
 ```
 
 ---
