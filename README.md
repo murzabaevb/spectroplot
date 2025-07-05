@@ -6,7 +6,7 @@ It’s designed for radio spectrum engineers, regulators, or analysts who want
 to visualize how frequency assignments stack up within different categories 
 (e.g., services, technologies, or operators).
 
-![Example Plot](./img/Figure_1.png)
+![Example Plot](https://github.com/murzabaevb/spectroplot/blob/master/img/Figure_1.png)
 
 ---
 
