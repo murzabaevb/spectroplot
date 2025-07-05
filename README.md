@@ -31,7 +31,7 @@ to visualize how frequency assignments stack up within different categories
 
 ## Installing
 ```bash
-# From PyPl
+# From PyPI
 py -m pip install spectroplot  # on Windows
 python3 -m pip install spectroplot  # on Unix/macOS
 
