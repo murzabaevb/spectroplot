@@ -166,3 +166,78 @@ class SpectroPlot:
         axes[-1].set_xlabel('frequency')
         plt.tight_layout()
         plt.show()
+
+    def occupied_ranges(self, output_file, min_freq=None, max_freq=None):
+        """Export continuous occupied ranges per category to an Excel file.
+
+        Parameters:
+            output_file: Path to the output Excel file.
+            min_freq: optional lower frequency limit.
+            max_freq: optional upper frequency limit.
+        """
+        if self.df is None:
+            raise RuntimeError("Data has not been loaded. Call load_data() first.")
+
+        min_bound = min_freq if min_freq is not None else self.min_freq
+        max_bound = max_freq if max_freq is not None else self.max_freq
+
+        export_rows = []
+
+        for idx, category in enumerate(self.categories):
+            cat_df = self.df[self.df[self.category_col] == category]
+
+            # Collect events (start, +1) and (end, -1)
+            events = []
+            for _, row in cat_df.iterrows():
+                start = max(row[self.start_col], min_bound)
+                end = min(row[self.end_col], max_bound)
+                if start > end:
+                    continue  # outside boundaries
+                events.append((start, 1))
+                events.append((end, -1))
+
+            if not events:
+                continue  # nothing valid for this category
+
+            # Sort and merge close events
+            events.sort()
+            merged_events = []
+            i = 0
+            while i < len(events):
+                freq, delta = events[i]
+                total_delta = delta
+                j = i + 1
+                while j < len(events) and abs(events[j][0] - freq) < self.epsilon:
+                    total_delta += events[j][1]
+                    j += 1
+                merged_events.append((freq, total_delta))
+                i = j
+
+            # Walk merged events to build continuous ranges
+            current_overlap = 0
+            range_start = None
+            for freq, delta in merged_events:
+                previous_overlap = current_overlap
+                current_overlap += delta
+                if previous_overlap == 0 and current_overlap > 0:
+                    # Overlap starts → new range starts here
+                    range_start = freq
+                elif previous_overlap > 0 and current_overlap == 0:
+                    # Overlap ends → range ends here
+                    export_rows.append({
+                        'Category': category,
+                        'Start': range_start,
+                        'Stop': freq
+                    })
+
+        if not export_rows:
+            raise ValueError("No valid occupied frequency ranges found to export with current boundaries.")
+
+        export_df = pd.DataFrame(export_rows)
+
+        try:
+            with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+                export_df.to_excel(writer, index=False, sheet_name='OccupiedRanges')
+        except Exception as e:
+            raise RuntimeError(f"Could not write to Excel file '{output_file}': {e}")
+
