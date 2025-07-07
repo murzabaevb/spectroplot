@@ -1,35 +1,38 @@
 # SpectroPlot
 
-**SpectroPlot** is a Python class for loading frequency assignment data 
-from Excel files, cleaning it, and plotting frequency overlaps by category. 
-It’s designed for radio spectrum engineers, regulators, or analysts who want 
-to visualize how frequency assignments stack up within different categories 
-(e.g., services, technologies, or operators).
+**SpectroPlot** is a Python tool for analyzing, visualizing, and exporting 
+frequency occupancy data across multiple categories. It provides:
+- Overlap plots showing simultaneous frequency use
+- Export of occupied ranges
+- Export of unoccupied ranges
 
-![Example Plot](https://github.com/murzabaevb/spectroplot/blob/master/img/Figure_1.png)
+It’s designed for radio spectrum engineers, regulators, or analysts who want 
+to visualize how frequency use stack up within different categories 
+(e.g., services, technologies, operators, etc.).
+
+![Example Plot](img/Figure_1.png)
 
 ---
-
 ## Features
 
-✅ Load frequency ranges and categories directly from Excel  
-✅ Exclude specified entries (e.g., rows marked with `Exclude='yes'`)  
-✅ Automatically clean, validate, and prepare data  
-✅ Plot frequency overlap "staircase" charts per category  
-✅ Flexible column naming  
-✅ Configurable frequency bounds  
-✅ Handles near-identical frequencies with `epsilon` tolerance
+- Load and clean frequency interval data from Excel file   
+- Flexible category, frequency, and exclude handling  
+- Handles near-identical frequencies with `epsilon` tolerance
+- Configurable frequency bounds
+- Plot frequency overlaps per category
+- Export occupied and unoccupied frequency intervals to Excel
+- Modular, reusable class design with tests
 
 ---
-
 ## Requirements
 
-- Python 3.7+
+- Python 3.12+
 - `pandas`
 - `matplotlib`
 - `openpyxl` (required by pandas to read `.xlsx`)
 
-## Installing
+## Installation
+
 ```bash
 # From PyPI
 py -m pip install spectroplot  # on Windows
@@ -41,8 +44,7 @@ python3 -m pip install git+https://github.com/murzabaevb/spectroplot.git  # on U
 ```
 
 ---
-
-## Expected Excel Format
+## Expected Excel file format
 
 Your Excel sheet must contain **four columns**, for example:
 
@@ -60,16 +62,17 @@ Your Excel sheet must contain **four columns**, for example:
 *Note:* These four columns could be named differently in Excel file. If so, 
 it is necessary to pass these headers when instantiating the object of the 
 class as shown in the example below. Apart from these four columns, the Excel 
-file may contain other columns that would be ignored during reading.
+file may contain other columns which would be ignored during reading.
 
 ---
-
-## Usage Example
+## Usage Examples
 
 ```python
 from spectroplot import SpectroPlot
 
-# Initialize with your Excel file, default sheet name and column headers
+# Initialize with your Excel file, default sheet name and column headers:
+# - default `sheet_name='Sheet1`,
+# - default `columns=['Category', 'Start', 'Stop', 'Exclude']`
 sp = SpectroPlot(excel_file='data.xlsx')
 
 # Load and clean data
@@ -79,12 +82,9 @@ sp.load_data()
 sp.plot()
 ```
 
-Default values: 
-- `sheet_name='Sheet1`,
-- `columns=['Category', 'Start', 'Stop', 'Exclude']`
-
 ```python
 from spectroplot import SpectroPlot
+
 # Initialize with your Excel file and custom sheet/columns
 sp = SpectroPlot(
     excel_file='assignments.xlsx',
@@ -102,8 +102,31 @@ sp.plot()
 sp.plot(min_freq=600, max_freq=4000)
 ```
 
----
+```python
+from spectroplot import SpectroPlot
 
+# Initialize with your Excel file, default sheet name and column headers:
+# - default `sheet_name='Sheet1`,
+# - default `columns=['Category', 'Start', 'Stop', 'Exclude']`
+sp = SpectroPlot(excel_file='data.xlsx')
+
+# Load and clean data
+sp.load_data()
+
+# Export occupied frequency ranges
+sp.occupied_ranges(output_file='occupied.xlsx')
+
+# Or specify frequency bounds as per your requirement
+sp.occupied_ranges(output_file='occupied.xlsx', min_freq=600, max_freq=4000)
+
+# Export unoccupied frequency ranges
+sp.unoccupied_ranges(output_file='unoccupied.xlsx')
+
+# Or specify frequency bounds as per your requirement
+sp.unoccupied_ranges(output_file='unoccupied.xlsx', min_freq=600, max_freq=4000)
+```
+
+---
 ## Output
 
 - Generates a **matplotlib plot** with one subplot per category
@@ -111,7 +134,6 @@ sp.plot(min_freq=600, max_freq=4000)
 - Colors are automatically assigned from the `tab20` colormap
 
 ---
-
 ## Parameters
 
 `SpectroPlot` constructor:
@@ -121,18 +143,25 @@ sp.plot(min_freq=600, max_freq=4000)
 - **epsilon**: Tolerance for merging events with nearly identical frequencies (default: `1e-6`)  
 
 `plot()` method:
-- **min_freq**: Lower frequency bound of plotting
-- **max_freq**: Upper frequency bound of plotting
+- **min_freq**: Lower frequency bound of plotting (default: Min freq. in Excel file)
+- **max_freq**: Upper frequency bound of plotting (default: Max freq. in Excel file)
+
+`occupied_ranges()` method:
+- **output_file**: Path to your Excel file
+- **min_freq**: Lower frequency bound of export (default: Min freq. in Excel file)
+- **max_freq**: Upper frequency bound of export (default: Max freq. in Excel file)
+
+`unoccupied_ranges()` method:
+- **output_file**: Path to your Excel file
+- **min_freq**: Lower frequency bound of export (default: Min freq. in Excel file)
+- **max_freq**: Upper frequency bound of export (default: Max freq. in Excel file)
 
 ---
-
 ## License
 
 MIT License. Feel free to use, modify, and contribute!
 
 ---
-
 ## Project Links
-
 - [GitHub Repository](https://github.com/murzabaevb/spectroplot.git)
 - [GitHub Issues](https://github.com/murzabaevb/spectroplot/issues)
