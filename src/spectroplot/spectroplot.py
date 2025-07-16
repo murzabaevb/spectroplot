@@ -221,6 +221,7 @@ class SpectroPlot:
         self._process_categories(min_bound, max_bound, plot_callback)
         axes[-1].set_xlabel('Frequency')
         plt.tight_layout()
+        plt.subplots_adjust(bottom=0.05)  # Adjust as needed
         plt.show()
 
     def occupied_ranges(self, output_file, min_freq=None, max_freq=None):
