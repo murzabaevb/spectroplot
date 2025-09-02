@@ -159,7 +159,7 @@ sp.unoccupied_ranges(output_file='unoccupied.xlsx', min_freq=600, max_freq=4000)
 ---
 ## License
 
-MIT License. Feel free to use, modify, and contribute!
+This project is licensed under the GNU General Public License. See the LICENSE.txt file for details.
 
 ---
 ## Project Links

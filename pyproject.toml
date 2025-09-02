@@ -17,7 +17,7 @@ authors = [
 ]
 description = "A Python class for plotting frequency overlaps."
 readme = "README.md"
-license = "MIT"
+license = "GPL-3.0-or-later"
 license-files = ["LICEN[CS]E.*"]
 keywords = ["spectrum", "frequency", "plot",]
 classifiers = [
